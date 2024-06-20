@@ -67,15 +67,15 @@ var selfCSVWriter = DefaultCSVWriter
 
 // DefaultCSVWriter is the default SafeCSVWriter used to format CSV (cf. csv.NewWriter)
 func DefaultCSVWriter(out io.Writer) *SafeCSVWriter {
-	writer := NewSafeCSVWriter(csv.NewWriter(out))
+	wrapped := csv.NewWriter(out)
 
 	// As only one rune can be defined as a CSV separator, we are going to trim
 	// the custom tag separator and use the first rune.
 	if runes := []rune(strings.TrimSpace(TagSeparator)); len(runes) > 0 {
-		writer.Comma = runes[0]
+		wrapped.Comma = runes[0]
 	}
 
-	return writer
+	return NewSafeCSVWriter(wrapped)
 }
 
 // SetCSVWriter sets the SafeCSVWriter used to format CSV.
